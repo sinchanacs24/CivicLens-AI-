@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: civiclens-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - PROJECT_ID=${PROJECT_ID}
+      - GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS}
+      - GCS_BUCKET_NAME=${GCS_BUCKET_NAME}
+      - BIGQUERY_DATASET=${BIGQUERY_DATASET}
+      - BIGQUERY_TABLE=${BIGQUERY_TABLE}
+      - UPLOAD_DIR=/app/uploaded_data
+      - MAX_UPLOAD_MB=${MAX_UPLOAD_MB:-50}
+      - CORS_ORIGINS=http://localhost:5173
+    volumes:
+      - ./backend/uploaded_data:/app/uploaded_data
+    # Uncomment to enable GPU acceleration via cuDF on a CUDA-enabled host with the
+    # NVIDIA Container Toolkit installed:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: civiclens-frontend
+    ports:
+      - "5173:80"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8000
+    depends_on:
+      - backend

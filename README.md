@@ -209,6 +209,16 @@ Toolkit installed — uncomment the `deploy.resources` block for the
 `backend` service in `docker-compose.yml`.
 
 ---
+## Verified Evidence
+
+**Google Cloud (2 services used):**
+- ✅ Cloud Storage — uploaded CSVs verified in bucket `civiclens-hackathon-sinchanacs`
+- ✅ BigQuery — complaint data loaded into `gen-lang-client-0885267984.civiclens.complaints` (10,040 rows, auto-detected schema)
+
+**NVIDIA GPU Acceleration:**
+- Benchmarked on real Tesla T4 GPU (Google Colab) using an 800,000-row complaints dataset
+- Pandas (CPU): 3.64s | cuDF (GPU): 1.25s | **Speedup: 2.92x**
+- Production deployment runs on Pandas for cost-efficient hosting; GPU acceleration is demonstrated separately since Render's free tier has no GPU. The same `cuDF` code path in `backend/app/services/data_processing.py` runs automatically on any CUDA-enabled deployment.
 
 ## API Reference
 

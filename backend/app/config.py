@@ -13,6 +13,21 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# On platforms like Render, there's no local file to point GOOGLE_APPLICATION_CREDENTIALS
+# at, so we allow pasting the full service-account JSON into an env var instead. If present,
+# write it to a temp file and point GOOGLE_APPLICATION_CREDENTIALS at that file so the
+# standard Google Cloud client libraries pick it up automatically.
+_creds_json = os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON")
+if _creds_json and not os.getenv("GOOGLE_APPLICATION_CREDENTIALS"):
+    import tempfile
+
+    _creds_file = tempfile.NamedTemporaryFile(
+        mode="w", suffix=".json", delete=False
+    )
+    _creds_file.write(_creds_json)
+    _creds_file.close()
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = _creds_file.name
+
 
 @dataclass(frozen=True)
 class Settings:

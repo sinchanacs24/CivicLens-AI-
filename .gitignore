@@ -25,3 +25,4 @@ backend/uploaded_data/
 
 # Logs
 *.log
+backend/gcp-service-account.json

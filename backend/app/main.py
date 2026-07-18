@@ -68,14 +68,19 @@ def preload_sample_dataset():
         )
         return
     try:
-        result = load_and_clean(sample_path)
+        import shutil
+        os.makedirs(settings.upload_dir, exist_ok=True)
+        preloaded_copy = os.path.join(settings.upload_dir, "preloaded_complaints.csv")
+        if not os.path.exists(preloaded_copy):
+            shutil.copy(sample_path, preloaded_copy)
+        result = load_and_clean(preloaded_copy)
         risk_df = compute_ward_risk(result.dataframe)
         analytics = build_analytics(result.dataframe, risk_df)
         state.dataframe = result.dataframe
         state.risk_df = risk_df
         state.analytics = analytics
         state.engine_used = result.engine
-        state.filename = "complaints.csv (sample)"
+        state.filename = "preloaded_complaints.csv"
         state.load_seconds = result.load_seconds
         state.clean_seconds = result.clean_seconds
         state.rows_before = result.rows_before

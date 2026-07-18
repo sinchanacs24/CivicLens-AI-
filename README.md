@@ -254,6 +254,13 @@ Toolkit installed — uncomment the `deploy.resources` block for the
 
 ---
 
+##Links
+Live app: https://civic-lens-ai-three.vercel.app
+GitHub: https://github.com/sinchanacs24/CivicLens-AI-
+Backend: https://civiclens-backend-uxbc.onrender.com
+
+---
+
 ## License
 
 Built for hackathon submission purposes.

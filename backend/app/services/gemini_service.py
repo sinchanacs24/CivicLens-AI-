@@ -94,3 +94,56 @@ def generate_ai_insights(analytics: dict[str, Any]) -> dict[str, Any]:
         fallback = _fallback_summary(analytics)
         fallback["source"] = f"fallback-error: {exc}"
         return fallback
+    
+ASK_PROMPT_TEMPLATE = """You are a municipal data analyst assistant for a city complaints dashboard. \
+Answer the user's question using ONLY the dataset context provided below. \
+Be concise (2-4 sentences), specific, and cite real numbers or ward names from the data. \
+If the answer isn't in the data, say so honestly. Do not make up figures.
+
+DATASET CONTEXT:
+{context_json}
+
+USER QUESTION:
+{question}
+"""
+
+
+def answer_question(question: str, analytics: dict[str, Any]) -> dict[str, Any]:
+    """
+    Answer a free-text question grounded in the current dataset's analytics.
+    Falls back to a helpful message if Gemini is unavailable.
+    """
+    if not settings.gemini_api_key:
+        return {
+            "answer": "The AI query feature needs a Gemini API key to be configured. "
+            "You can still explore the dashboard charts and risk table above.",
+            "source": "fallback-no-key",
+        }
+
+    # Trim the context so we send a compact, relevant slice to Gemini.
+    context = {
+        "summary": analytics.get("summary", {}),
+        "ward_leaderboard": analytics.get("ward_leaderboard", [])[:10],
+        "complaints_by_category": analytics.get("complaints_by_category", []),
+        "department_workload": analytics.get("department_workload", []),
+        "risk_distribution": analytics.get("risk_distribution", []),
+    }
+
+    try:
+        from google import genai
+
+        client = genai.Client(api_key=settings.gemini_api_key)
+        prompt = ASK_PROMPT_TEMPLATE.format(
+            context_json=json.dumps(context, default=str),
+            question=question,
+        )
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt,
+        )
+        return {"answer": response.text.strip(), "source": "gemini"}
+    except Exception as exc:  # noqa: BLE001
+        return {
+            "answer": "Sorry, I couldn't process that question right now. Please try rephrasing it.",
+            "source": f"fallback-error: {exc}",
+        } 

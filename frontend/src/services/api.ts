@@ -37,6 +37,16 @@ export async function fetchDashboard(): Promise<DashboardResponse> {
   return data;
 }
 
+export interface AskResponse {
+  answer: string;
+  source: string;
+}
+
+export async function askCivicLens(question: string): Promise<AskResponse> {
+  const { data } = await api.post<AskResponse>("/ask", { question });
+  return data;
+}
+
 export async function fetchRisk(): Promise<RiskResponse> {
   const { data } = await api.get<RiskResponse>("/risk");
   return data;

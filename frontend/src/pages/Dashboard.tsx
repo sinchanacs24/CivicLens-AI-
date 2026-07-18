@@ -12,6 +12,9 @@ import EmptyState from "../components/EmptyState";
 import RiskTable from "../components/RiskTable";
 import AiInsightsPanel from "../components/AiInsightsPanel";
 import BenchmarkPanel from "../components/BenchmarkPanel";
+import AskCivicLens from "../components/AskCivicLens";
+import { generateReport } from "../utils/reportGenerator";
+import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import {
   CategoryBarChart,
   ComplaintTrendChart,
@@ -63,6 +66,13 @@ export default function Dashboard() {
             with <span className="uppercase text-accent-400">{dashboard.engine_used}</span>
           </p>
         </div>
+        <button
+          onClick={() => generateReport(dashboard, risk)}
+          className="btn-secondary text-sm"
+        >
+          <ArrowDownTrayIcon className="h-5 w-5" />
+          Download Report
+        </button>
       </div>
 
       <div className="mb-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -129,6 +139,10 @@ export default function Dashboard() {
         <RiskTable wards={risk?.top_risk_wards || dashboard.ward_leaderboard} />
       </div>
 
+      <div className="mb-10">
+        <AskCivicLens />
+      </div>
+      
       <div className="mb-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
         {insights ? (
           <AiInsightsPanel insights={insights} />

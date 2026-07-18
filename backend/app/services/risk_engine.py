@@ -64,6 +64,17 @@ def compute_ward_risk(df: pd.DataFrame) -> pd.DataFrame:
 
     grouped["risk_level"] = grouped["risk_score"].apply(bucket)
 
+    # Anomaly detection: flag wards whose complaint volume is a statistical
+    # outlier (more than 1.5 standard deviations above the mean). Pure NumPy,
+    # so it's fast and needs no external services.
+    mean_count = grouped["complaint_count"].mean()
+    std_count = grouped["complaint_count"].std()
+    if std_count and std_count > 0:
+        threshold = mean_count + 1.5 * std_count
+        grouped["is_anomaly"] = grouped["complaint_count"] > threshold
+    else:
+        grouped["is_anomaly"] = False
+
     grouped = grouped.sort_values("risk_score", ascending=False).reset_index(drop=True)
 
     cols = [
@@ -76,6 +87,7 @@ def compute_ward_risk(df: pd.DataFrame) -> pd.DataFrame:
         "population",
         "risk_score",
         "risk_level",
+        "is_anomaly",
     ]
     return grouped[cols]
 

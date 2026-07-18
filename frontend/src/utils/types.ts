@@ -42,6 +42,7 @@ export interface WardRisk {
   population: number;
   risk_score: number;
   risk_level: "Low" | "Medium" | "High";
+  is_anomaly?: boolean;
 }
 
 export interface DepartmentWorkload {

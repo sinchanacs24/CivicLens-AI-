@@ -25,7 +25,19 @@ export default function RiskTable({ wards }: { wards: WardRisk[] }) {
                   idx % 2 === 0 ? "bg-white/[0.02]" : ""
                 }`}
               >
-                <td className="px-5 py-3 font-semibold">{w.ward}</td>
+                <td className="px-5 py-3 font-semibold">
+                  <div className="flex items-center gap-2">
+                    <span>{w.ward}</span>
+                    {w.is_anomaly && (
+                      <span
+                        title="Complaint volume is a statistical outlier"
+                        className="rounded-full bg-red-500/15 px-2 py-0.5 text-[10px] font-semibold text-red-400"
+                      >
+                        ⚠ Spike
+                      </span>
+                    )}
+                  </div>
+                </td>
                 <td className="px-5 py-3">{formatNumber(w.complaint_count)}</td>
                 <td className="px-5 py-3">{formatNumber(w.open_cases)}</td>
                 <td className="px-5 py-3">{formatNumber(w.resolved_cases)}</td>

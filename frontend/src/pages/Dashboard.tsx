@@ -15,6 +15,7 @@ import BenchmarkPanel from "../components/BenchmarkPanel";
 import AskCivicLens from "../components/AskCivicLens";
 import { generateReport } from "../utils/reportGenerator";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
+import RiskMap from "../components/RiskMap";
 import {
   CategoryBarChart,
   ComplaintTrendChart,
@@ -130,6 +131,13 @@ export default function Dashboard() {
           </h3>
           <DepartmentWorkloadChart data={dashboard.department_workload} />
         </div>
+      </div>
+
+      <div className="mb-10">
+        <h3 className="mb-4 font-display text-lg font-bold text-white">
+          Risk Map
+        </h3>
+        <RiskMap wards={risk?.wards || dashboard.ward_leaderboard} />
       </div>
 
       <div className="mb-10">

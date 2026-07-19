@@ -36,6 +36,8 @@ def compute_ward_risk(df: pd.DataFrame) -> pd.DataFrame:
         avg_traffic=("traffic", "mean"),
         population=("population", "mean"),
         avg_priority_weight=("priority_weight", "mean"),
+        latitude=("latitude", "mean"),
+        longitude=("longitude", "mean"),
         open_cases=("status", lambda s: (s.isin(["Open", "Pending", "In Progress"])).sum()),
         resolved_cases=("status", lambda s: (s.isin(["Resolved", "Closed"])).sum()),
     ).reset_index()
@@ -85,6 +87,8 @@ def compute_ward_risk(df: pd.DataFrame) -> pd.DataFrame:
         "avg_rainfall",
         "avg_traffic",
         "population",
+        "latitude",
+        "longitude",
         "risk_score",
         "risk_level",
         "is_anomaly",

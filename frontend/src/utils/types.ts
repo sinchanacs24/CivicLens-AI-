@@ -40,6 +40,8 @@ export interface WardRisk {
   avg_rainfall: number;
   avg_traffic: number;
   population: number;
+   latitude?: number;
+  longitude?: number;
   risk_score: number;
   risk_level: "Low" | "Medium" | "High";
   is_anomaly?: boolean;

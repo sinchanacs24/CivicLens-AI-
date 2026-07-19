@@ -137,7 +137,7 @@ export default function Dashboard() {
           Top Risk Wards
         </h3>
         <p className="mb-4 text-sm text-slate-400">
-          Wards marked <span className="text-red-400">⚠ Spike</span> have an abnormally high complaint volume (statistical outlier).
+          Click any ward for a detailed breakdown. Wards marked <span className="text-red-400">⚠ Spike</span> have an abnormally high complaint volume (statistical outlier).
         </p>
         <RiskTable wards={risk?.top_risk_wards || dashboard.ward_leaderboard} />
       </div>

@@ -71,3 +71,24 @@ export function extractErrorMessage(error: unknown): string {
   }
   return "Something went wrong. Please try again.";
 }
+
+export interface WardDetail {
+  ward: string;
+  total_complaints: number;
+  by_category: { category: string; count: number }[];
+  by_status: { status: string; count: number }[];
+  by_priority: { priority: string; count: number }[];
+  risk: {
+    risk_score?: number;
+    risk_level?: string;
+    open_cases?: number;
+    resolved_cases?: number;
+    population?: number;
+    is_anomaly?: boolean;
+  };
+}
+
+export async function fetchWardDetail(wardName: string): Promise<WardDetail> {
+  const { data } = await api.get<WardDetail>(`/ward/${encodeURIComponent(wardName)}`);
+  return data;
+}
